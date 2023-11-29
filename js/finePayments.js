@@ -1,38 +1,53 @@
-"use strict";
-/**
-Перед вами список полів. Це можна сказати пряме посилання на кожне із полів форми.
-Якщо ви додасте до змінної .value (fineNumber.value) то отримаєте значення
-яке зберігається в цьому полі.
- */
 let fineNumber = document.getElementById("fineNumber");
 let passport = document.getElementById("passport");
 let creditCardNumber = document.getElementById("creditCardNumber");
-let cvv = document.getElementById("cvv");
+let cvv = document.getElementById("cvv");  
 let amount = document.getElementById("amount");
-let buttonSubmit = document.getElementById("payFine");
-
-//Ця зміна містить всі дані які в нас зберігаються у файлі data
+let buttonSubmit = document.getElementById("payFine"); 
+  
 let DB = data.finesData;
+ 
+buttonSubmit.addEventListener("click", payFine);
 
-
-/**
-Вам необхідно реалізувати наступний функціонал.
-Зробити валідацію до всіх полів
-1. Номер та сума повинні бути однакові як в існуючого штрафу - якщо ні видавати
-alert "Номер не співпадає" або "Сума не співпадає"
-
-2. Паспортні дані у форматі - перші дві літери укр алфавіту, та 6 цифр.
-Якщо не співпадає то видавати alert "Не вірний паспортний номер"
-
-3. Номер кредитної карки 16 цифр -
-якщо не співпадає то видавати alert "Не вірна кредитна картка"
-
-4. cvv 3 цифри - якщо не співпадає то видавати alert "Не вірний cvv".
-
-Якщо валідація проходить успішно, то виконати оплату,
- тобто вам потрібно видалити обєкт з DB
- */
-buttonSubmit.addEventListener('click',payFine);
-function payFine(){
-
+function payFine() {
+  const fineNumberValue = fineNumber.value;
+  const passportValue = passport.value;
+  const creditCardNumberValue = creditCardNumber.value;
+  const cvvValue = cvv.value;
+  const amountValue = amount.value;
+   
+  // Пошук штрафу за номером
+  const foundFine = DB.find((fine) => fine.номер === fineNumberValue);
+    
+  // Валідація полів:
+  //Номер штрафу
+  if (!foundFine) { 
+    alert("Штраф з введеним номером не знайдений.");  
+    return;
+  }
+  //Зпівпадінн сумми з номером штрафу
+  if (foundFine.сума !== parseFloat(amountValue)) {
+    alert("Сума не співпадає з існуючим штрафом.");
+    return;
+  }
+    //Паспортний номер
+  if (!/^[А-ЩЬЮЯІЇЄҐ]{2}\d{6}$/.test(passportValue)) {
+    alert("Не вірний паспортний номер.");
+    return;
+}
+  //Кредитна картка
+  if (!/^\d{16}$/.test(creditCardNumberValue)) {
+    alert("Не вірна кредитна картка.");
+    return;
+  }
+  //CVV код
+  if (!/^\d{3}$/.test(cvvValue)) {
+    alert("Не вірний CVV.");
+    return;
+  }
+    
+  // Видалення об'єкта з DB
+  const indexToRemove = DB.findIndex((fine) => fine.номер === fineNumberValue);
+  DB.splice(indexToRemove, 1);
+  alert("Штраф успішно оплачено та видалено з бази даних.");
 }
