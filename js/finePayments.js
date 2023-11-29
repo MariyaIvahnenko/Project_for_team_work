@@ -33,6 +33,47 @@ alert "Номер не співпадає" або "Сума не співпад�
  тобто вам потрібно видалити обєкт з DB
  */
 buttonSubmit.addEventListener('click',payFine);
-function payFine(){
+function payFine() {
+    let fineNumberValue = fineNumber.value;
+    let passportValue = passport.value;
+    let creditCardNumberValue = creditCardNumber.value;
+    let cvvValue = cvv.value;
+    let amountValue = amount.value;
 
+    // Перевірка номера штрафу та суми
+    let fine = DB.find(fine => fine.номер === fineNumberValue);
+    if (!fine) {
+        alert("Номер не співпадає");
+        return;
+    }
+    if (fine.сума.toString() !== amountValue) {
+        alert("Сума не співпадає");
+        return;
+    }
+
+    // Перевірка паспортних даних
+    let passportPattern = /^[А-ЯІЇЄ]{2}\d{6}$/;
+    if (!passportPattern.test(passportValue)) {
+        alert("Не вірний паспортний номер");
+        return;
+    }
+
+    // Перевірка номера кредитної картки
+    let cardPattern = /^\d{16}$/;
+    if (!cardPattern.test(creditCardNumberValue)) {
+        alert("Не вірна кредитна картка");
+        return;
+    }
+
+    // Перевірка CVV
+    let cvvPattern = /^\d{3}$/;
+    if (!cvvPattern.test(cvvValue)) {
+        alert("Не вірний cvv");
+        return;
+    }
+
+    // Видалення штрафу з бази даних
+    data.finesData = data.finesData.filter(fine => fine.номер !== fineNumberValue);
+
+    alert("Оплата штрафу успішно проведена");
 }

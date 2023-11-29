@@ -18,10 +18,20 @@ function searchFines(searchKey){
      - Невірне паркування
      - Їзда у не тверезому стані
      */
+    
+     searchKey = searchKey.toLowerCase();
+     return data.finesData.filter(item => {
+        return (
+         item.номер.toLowerCase().includes(searchKey) || 
+         item.тип.toLowerCase().includes(searchKey)
+        )
+     })
+    
 
 
-    return [
+
+    /*return [
         {номер: '001', тип: 'Перевищення швидкості', сума: 100, дата: '2023-01-15'}
-    ];
+    ];*/
 }
 
