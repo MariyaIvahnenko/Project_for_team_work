@@ -1,4 +1,4 @@
-"use strict";
+
 window.fineList = {
   searchFines: searchFines,
 };

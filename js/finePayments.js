@@ -31,23 +31,28 @@ function payFine() {
     return;
   }
     //Паспортний номер
-  if (!/^[А-ЩЬЮЯІЇЄҐ]{2}\d{6}$/.test(passportValue)) {
-    alert("Не вірний паспортний номер.");
-    return;
-}
+    let passportPattern = /^[А-ЯІЇЄ]{2}\d{6}$/;
+    if (!passportPattern.test(passportValue)) {
+        alert("Не вірний паспортний номер");
+        return;
+    }
+
   //Кредитна картка
   if (!/^\d{16}$/.test(creditCardNumberValue)) {
     alert("Не вірна кредитна картка.");
     return;
   }
   //CVV код
-  if (!/^\d{3}$/.test(cvvValue)) {
-    alert("Не вірний CVV.");
-    return;
-  }
+  let cvvPattern = /^\d{3}$/;
+    if (!cvvPattern.test(cvvValue)) {
+        alert("Не вірний cvv");
+        return;
+    };
+  
     
   // Видалення об'єкта з DB
   const indexToRemove = DB.findIndex((fine) => fine.номер === fineNumberValue);
   DB.splice(indexToRemove, 1);
   alert("Штраф успішно оплачено та видалено з бази даних.");
 }
+
